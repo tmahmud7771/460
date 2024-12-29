@@ -290,3 +290,137 @@ Input       | Output | Valid
    - Resource allocation
    - Task scheduling
    - Memory management
+
+## Quartus 8.1 Simulation Guide
+
+### Creating Waveform File (.vwf)
+
+1. **Create New Waveform**
+
+   - File → New
+   - Select "Vector Waveform File" (.vwf)
+   - Save file (e.g., "fsm_simulation.vwf")
+
+2. **Basic Setup**
+   - Edit → End Time (set to 1000ns)
+   - Set Grid size as needed (View → Grid Size)
+
+### Adding Signals
+
+1. **For FSM Testing**
+
+   ```
+   Right-click → Insert Node or Bus:
+   - clk    (1-bit)
+   - reset  (1-bit)
+   - w      (1-bit)
+   - z      (1-bit)
+   - state  (3-bits)
+   ```
+
+2. **For Priority Encoder Testing**
+   ```
+   Right-click → Insert Node or Bus:
+   - in[7:0]   (8-bits)
+   - out[2:0]  (3-bits)
+   - valid     (1-bit)
+   ```
+
+### Setting Test Patterns
+
+1. **FSM Test Pattern**
+
+   ```
+   Clock setup:
+   - Right-click on clk → Clock
+   - Set period = 20ns
+
+   Reset pattern:
+   - High (0-40ns)
+   - Low (40ns onwards)
+
+   Input 'w' test sequence:
+   Time(ns)  w    Expected z
+   40-100    1    0
+   100-160   0    0
+   160-220   1    0
+   220-280   1    1
+   280-340   0    0
+   ```
+
+2. **Priority Encoder Test Pattern**
+   ```
+   Input 'in[7:0]' sequence:
+   Time(ns)  in[7:0]    Expected out[2:0]  valid
+   0-100     10000000   111                1
+   100-200   01000000   110                1
+   200-300   00100000   101                1
+   300-400   00000001   000                1
+   400-500   00000000   000                0
+   ```
+
+### Running Simulation
+
+1. **Preparation**
+
+   - Processing → Generate Functional Simulation Netlist
+   - Assignments → Settings → Simulator: "Quartus II Simulator"
+   - File → Save
+
+2. **Execute**
+   - Processing → Start Simulation
+
+### Analyzing Results
+
+1. **FSM Verification Points**
+
+   - Reset behavior correct
+   - State transitions on clock edges
+   - Output changes match specification
+   - No unexpected state transitions
+
+2. **Priority Encoder Checks**
+   - Correct priority handling
+   - Valid signal operation
+   - Output stability
+   - Response to input changes
+
+### Common Issues and Solutions
+
+1. **Timing Problems**
+
+   - Check clock period settings
+   - Verify signal transition times
+   - Ensure adequate test duration
+
+2. **Display Issues**
+
+   - Adjust radix display (Right-click → Radix)
+   - Modify grid settings
+   - Change time scale if needed
+
+3. **Simulation Errors**
+   - Verify node names match design
+   - Check signal connections
+   - Confirm proper netlist generation
+
+### Best Practices
+
+1. **Test Organization**
+
+   - Use clear test patterns
+   - Include comments in waveform
+   - Test all state transitions
+   - Verify edge cases
+
+2. **Documentation**
+
+   - Save waveform configurations
+   - Export important results
+   - Document test scenarios
+
+3. **Verification Steps**
+   - Confirm reset operation
+   - Check all state transitions
+   - Verify output timing
+   - Test boundary conditions
