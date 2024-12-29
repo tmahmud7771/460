@@ -1,6 +1,8 @@
-# Finite State Machine (FSM) Implementation Guide
+# Digital Design Implementation Guide
 
 ## Table of Contents
+
+- [Priority Encoder](#priority-encoder)
 
 - [Introduction](#introduction)
 - [Understanding FSM Types](#understanding-fsm-types)
@@ -200,3 +202,91 @@ Common Issues and Solutions:
    - Use proper always block sensitivity lists
    - Avoid latches
    - Check for incomplete assignments
+
+## Priority Encoder
+
+### Introduction
+
+A priority encoder is a combinational circuit that outputs the binary code of the highest priority input that is active.
+
+### 8-to-3 Priority Encoder
+
+#### Code Template
+
+```verilog
+module priority_encoder_8to3(
+    input [7:0] in,      // 8-bit input
+    output reg [2:0] out,// 3-bit output
+    output reg valid     // valid output indicator
+);
+
+always @(*) begin
+    casex(in)
+        8'b1xxxxxxx: begin out = 3'b111; valid = 1'b1; end  // Priority 7
+        8'b01xxxxxx: begin out = 3'b110; valid = 1'b1; end  // Priority 6
+        8'b001xxxxx: begin out = 3'b101; valid = 1'b1; end  // Priority 5
+        8'b0001xxxx: begin out = 3'b100; valid = 1'b1; end  // Priority 4
+        8'b00001xxx: begin out = 3'b011; valid = 1'b1; end  // Priority 3
+        8'b000001xx: begin out = 3'b010; valid = 1'b1; end  // Priority 2
+        8'b0000001x: begin out = 3'b001; valid = 1'b1; end  // Priority 1
+        8'b00000001: begin out = 3'b000; valid = 1'b1; end  // Priority 0
+        8'b00000000: begin out = 3'b000; valid = 1'b0; end  // No input
+        default: begin out = 3'b000; valid = 1'b0; end
+    endcase
+end
+endmodule
+```
+
+#### Key Features
+
+1. **Input [7:0]**
+
+   - 8-bit input where each bit represents a priority level
+   - Bit 7 has highest priority, Bit 0 has lowest priority
+
+2. **Output [2:0]**
+
+   - 3-bit binary output representing highest active input
+   - Output ranges from 000 to 111
+
+3. **Valid Signal**
+   - Indicates if any input is active
+   - High when at least one input is 1
+   - Low when all inputs are 0
+
+#### Truth Table Example
+
+```
+Input       | Output | Valid
+8'b10100000 | 3'b111 | 1    // Bit 7 is high (highest priority)
+8'b00100000 | 3'b101 | 1    // Bit 5 is high
+8'b00000010 | 3'b001 | 1    // Bit 1 is high
+8'b00000000 | 3'b000 | 0    // No bits high
+```
+
+#### Implementation Notes
+
+1. **Using casex**
+
+   - 'x' represents "don't care" conditions
+   - Simplifies priority logic implementation
+   - Makes code more readable
+
+2. **Priority Logic**
+
+   - Always checks highest priority bit first
+   - Lower priority bits are ignored if higher priority bit is set
+   - Uses cascading priority structure
+
+3. **Best Practices**
+
+   - Use meaningful signal names
+   - Include valid signal for error checking
+   - Document priority levels clearly
+   - Consider adding parameter definitions for flexibility
+
+4. **Common Applications**
+   - Interrupt handling systems
+   - Resource allocation
+   - Task scheduling
+   - Memory management
