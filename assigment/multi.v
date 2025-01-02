@@ -55,9 +55,20 @@ module sequence_detector(
     end
 
     always @(*) begin
-        z_w = (state_w == W_S3) && !w;
-        z_x = (state_x == X_S2) && x;
-        z_y = (state_y == Y_S1) && !y;
+        case(state_w)
+            W_S3: z_w = !w;    
+            default: z_w = 0;
+        endcase
+
+        case(state_x)
+            X_S2: z_x = x;     
+            default: z_x = 0;
+        endcase
+
+        case(state_y)
+            Y_S1: z_y = !y;   
+            default: z_y = 0;
+        endcase
     end
 
     always @(negedge clk) begin
