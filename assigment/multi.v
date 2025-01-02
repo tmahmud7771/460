@@ -7,22 +7,22 @@ module sequence_detector(
     output reg z
 );
 
-    reg [1:0] state_w;
-    reg [1:0] state_x;
-    reg [1:0] state_y;
-    reg z_w, z_x, z_y;
+    reg [1:0] state_w;    
+    reg [1:0] state_x;    
+    reg [1:0] state_y;    
+    reg z_w, z_x, z_y;    
 
-    parameter W_S0 = 2'b00;
-    parameter W_S1 = 2'b01;
-    parameter W_S2 = 2'b10;
-    parameter W_S3 = 2'b11;
+    parameter W_S0 = 2'b00;  
+    parameter W_S1 = 2'b01;  
+    parameter W_S2 = 2'b10;  
+    parameter W_S3 = 2'b11;  
 
-    parameter X_S0 = 2'b00;
-    parameter X_S1 = 2'b01;
-    parameter X_S2 = 2'b10;
+    parameter X_S0 = 2'b00;  
+    parameter X_S1 = 2'b01;  
+    parameter X_S2 = 2'b10;  
 
-    parameter Y_S0 = 2'b00;
-    parameter Y_S1 = 2'b01;
+    parameter Y_S0 = 2'b00;  
+    parameter Y_S1 = 2'b01;  
 
     always @(posedge clk or posedge reset) begin
         if (reset) begin
