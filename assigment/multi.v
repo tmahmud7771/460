@@ -1,4 +1,4 @@
-module sequence_detector(
+module sequence(
     input clk,
     input reset,
     input x,
